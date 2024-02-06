@@ -7,7 +7,6 @@ Maven
 Spring
 MySQL
 
-
 ###Uso
 La aplicación se ejecutará en http://localhost:8080.
 ####La API proporciona los siguientes endpoints:    
