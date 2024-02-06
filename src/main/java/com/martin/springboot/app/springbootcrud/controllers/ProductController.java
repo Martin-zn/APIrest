@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.martin.springboot.app.springbootcrud.ProductValidation;
 import com.martin.springboot.app.springbootcrud.entities.Product;
 import com.martin.springboot.app.springbootcrud.services.ProductService;
 
@@ -34,8 +35,10 @@ public class ProductController {
     @Autowired
     private ProductService service;
 
-    //Genero un metodo
+    @Autowired
+    private ProductValidation validation;
 
+    //Genero un metodo
     //Muestra la lista completa
     @GetMapping("/list")
     public List<Product> list(){
@@ -56,6 +59,8 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<?> crear(@Valid @RequestBody Product product, BindingResult result){
+
+        validation.validate(product, result);
         //Validacion 
         if(result.hasFieldErrors()){
             return validation(result);
@@ -67,6 +72,7 @@ public class ProductController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@Valid @RequestBody Product product, BindingResult result, @PathVariable Long id){
+        validation.validate(product, result);
         //Validacion 
         if(result.hasFieldErrors()){
             return validation(result);
@@ -93,12 +99,12 @@ public class ProductController {
     }
 
 
-    //MEtodo de validacion
+    //Metodo de validacion
     private ResponseEntity<?> validation(BindingResult result) {
         Map<String, String> errors = new HashMap<>();
 
         result.getFieldErrors().forEach(err -> {
-            errors.put(err.getField(), "El campo " + err.getField() + " " + err.getDefaultMessage());
+            errors.put(err.getField(),  err.getField() + " " + err.getDefaultMessage());
         });
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
