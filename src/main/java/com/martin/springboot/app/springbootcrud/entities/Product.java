@@ -18,7 +18,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty
+    @NotEmpty(message = "El nombre es requerido!")
     @Size(min = 3, max =20)
     private String name;
     @NotNull
